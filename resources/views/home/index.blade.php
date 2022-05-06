@@ -31,7 +31,8 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->created_at->format('d-m-Y h:i:s A') }}</td>
                             <td>
-                                <image src="{{ asset('/images/users/'.$user->image) }}"/>
+                                {{-- <img src="{{ URL::asset("images/users/{$user->image}")}}"/> --}}
+                                <img src="{{ asset('storage/images/users/'. $user->image) }}" width="120px" height="60px"/>
                             </td>
                             <td>
                                 {{-- <button type="button" name="edit" class="btn btn-warning edit" id="{{ $user->id }}">Edit</button> --}}

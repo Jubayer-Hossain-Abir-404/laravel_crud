@@ -24,6 +24,12 @@
                 <label>Enter Email</label>
                 <input type="email" name="email" id="email" class="form-control" value="{{ $user_table->email }}"/>
             </div>
+
+            <div class="form-group mt-2">
+                <label for="image">Update Image</label>
+                <input type="file" name="image" class="form-control-file"><br>
+                <img src="{{ asset('storage/images/users/'. $user_table->image) }}" width="120px" height="60px"/>
+            </div>
         </div>
         <div>
             <input type="submit" name="button_insert" id="button_insert" class="btn btn-info" value="Update" />

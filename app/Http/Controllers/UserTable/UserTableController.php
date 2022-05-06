@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UserTable;
 use App\Http\Controllers\Controller;
 use App\Models\UserTable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class UserTableController extends Controller
 {
@@ -22,7 +23,7 @@ class UserTableController extends Controller
         return view('edit.edit', compact('user_table'));
     }
 
-    public function update(UserTable $user_table)
+    public function update(UserTable $user_table, Request $request)
     {
         request()->validate([
 
@@ -30,15 +31,42 @@ class UserTableController extends Controller
 
             'email' => 'required|email|max:255',
         ]);
+
+        $input = $request->all();
+        if($request->hasFile('image'))
+        {
+            // $user_img = UserTable::find($user_table);
+            // $destination = 'public/images/users'.$user_table->image;
+
+            // if(File::exists($destination))
+            // {
+            //     File::delete($destination);
+            // }
+
+            $file_name = $user_table->image;
+            $file_path = public_path('storage/images/users/'. $file_name);
+            if(File::exists($file_path)){
+                unlink($file_path);
+            }
+            
+
+            $destination_path = 'public/images/users';
+            $image = $request->file('image');
+            $image_name = $image->getClientOriginalName();
+            $path = $request->file('image')->storeAs($destination_path, $image_name);
+
+            $input['image'] = $image_name;
+        }
         
 
-        $user_table->update([
+        // $user_table->update([
 
-            'name' => request('name'),
+        //     'name' => request('name'),
 
-            'email' => request('email'),
-        ]);
-
+        //     'email' => request('email'),
+        // ]);
+        
+        $user_table->update($input);
 
         return redirect()->route('home');
     }
@@ -90,6 +118,15 @@ class UserTableController extends Controller
 
     public function destroy(UserTable $user_table)
     {
+        // $destination = 'public/images/users'.$user_table->image;
+        // if(File::exists($destination))
+        // {
+        //         File::delete($destination);
+        // }
+        $file_name = $user_table->image;
+        $file_path = public_path('storage/images/users/'. $file_name);
+        unlink($file_path);
+
         $user_table->delete();
 
         return redirect()->route('home');
